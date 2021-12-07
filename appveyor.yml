@@ -1,3 +1,4 @@
+image: Visual Studio 2019
 version: '{build}'
 
 environment:
@@ -17,13 +18,6 @@ init:
 #- ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
-# Hack to make WDK 1903 work on VS2015.
-# See https://github.com/appveyor-tests/WDK-10.0.14393.0/blob/31cf12217fe0c92b218c70d7027dfe145be4f4cb/appveyor.yml#L7
-- ps: |
-    [xml]$targets = get-content "C:\Program Files (x86)\Windows Kits\10\build\WindowsDriver.Common.targets"
-    $usingTask = $targets.ChildNodes[1].UsingTask | ? {$_.TaskName -eq "ValidateNTTargetVersion"}
-    $usingTask.AssemblyFile = '$(WDKContentRoot)build\bin\Microsoft.DriverKit.Build.Tasks.16.0.dll'
-    $targets.Save("C:\Program Files (x86)\Windows Kits\10\build\WindowsDriver.Common.targets")
 # Submodules
 - git submodule update --init --recursive
 # Kernel and user mode dumps
@@ -35,7 +29,7 @@ install:
 # Boot configuration
 - appveyor AddMessage "Change boot configuration and reboot" -Category Information
 - bcdedit /set testsigning on
-- if %TESTING%==Func verifier /standard /driver winfsp-x64.sys
+- if %TESTING%==Func verifier /standard /driver winfsp-x64.sys & exit 0
 - ps: Restart-Computer -Force
 - ps: Start-Sleep -s 60
 
