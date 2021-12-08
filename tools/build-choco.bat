@@ -1,5 +1,7 @@
 @echo off
 
+REM NOTE: The files build.bat and build-choco.bat must be duplicates.
+
 setlocal
 setlocal EnableDelayedExpansion
 
