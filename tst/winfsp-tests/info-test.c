@@ -2232,6 +2232,12 @@ void rename_ex_test(void)
 {
     if (OptLegacyUnlinkRename)
         return;
+    if (OptShareName)
+        /*
+         * This test fails with shares on Server 2019. It returns
+         * STATUS_INVALID_PARAMETER for FileRenameInformationEx.
+         */
+        return;
 
     if (NtfsTests)
     {
@@ -2530,7 +2536,7 @@ void info_tests(void)
     if (!OptShareName)
         TEST(rename_mmap_test);
     TEST(rename_standby_test);
-    if (!OptLegacyUnlinkRename)
+    if (!OptLegacyUnlinkRename && !OptShareName)
         TEST(rename_ex_test);
     if (!NtfsTests)
         TEST(rename_pid_test);
