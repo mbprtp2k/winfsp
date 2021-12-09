@@ -1111,6 +1111,13 @@ void delete_ex_test(void)
 {
     if (OptLegacyUnlinkRename)
         return;
+    if (OptShareName)
+        /*
+         * This test fails with shares on Server 2019. It returns
+         * STATUS_INVALID_PARAMETER for FileDispositionInformationEx.
+         */
+        return;
+
 
     if (NtfsTests)
     {
@@ -2512,7 +2519,7 @@ void info_tests(void)
     if (!OptShareName)
         TEST(delete_mmap_test);
     TEST(delete_standby_test);
-    if (!OptLegacyUnlinkRename)
+    if (!OptLegacyUnlinkRename && !OptShareName)
         TEST(delete_ex_test);
     TEST(rename_test);
     TEST(rename_backslash_test);
