@@ -643,7 +643,14 @@ if !ERRORLEVEL! neq 0 set IfsTestMemfsExit=1
 rem ReparsePoints.SetPointEASNotSupportedTest: EA's not supported
 rem ReparsePoints.EnumReparsePointsTest: enumeration of reparse points not supported
 rem ReparsePoints.ChangeNotificationReparseTest: change notifications of reparse points not supported
-call :__ifstest %1 /g ReparsePoints -t SetPointEASNotSupportedTest -t EnumReparsePointsTest -t ChangeNotificationReparseTest /c
+rem ReparsePoints.SetPointIoReparseDataInvalidTest:
+rem     This test succeeds on Server 2012 and fails on Server 2019. Investigation
+rem     showed that the FSCTL_SET_REPARSE_POINT input buffer length was 23 instead
+rem     of less than REPARSE_DATA_BUFFER_HEADER_SIZE(==8) as ifstest claims. This
+rem     suggests that WinFsp is not the problem here, but perhaps some OS changes
+rem     between Server 2012 and Server 2019. NOTE that we are still using the
+rem     ifstest from Server 2012 HCK, which may account for the difference.
+call :__ifstest %1 /g ReparsePoints -t SetPointEASNotSupportedTest -t EnumReparsePointsTest -t ChangeNotificationReparseTest -t SetPointIoReparseDataInvalidTest /c
 if !ERRORLEVEL! neq 0 set IfsTestMemfsExit=1
 rem IfsTest ReparsePoints seems to have a bug in that it cannot handle STATUS_PENDING for FSCTL_GET_REPARSE_POINT
 rmdir /s/q reparspt
