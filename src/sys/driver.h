@@ -703,7 +703,7 @@ typedef struct
 } FSP_WGROUP;
 VOID FspWgroupInitialize(FSP_WGROUP *Wgroup);
 VOID FspWgroupIncrement(FSP_WGROUP *Wgroup);
-VOID FspWgroupDecrement(FSP_WGROUP *Wgroup);
+VOID FspWgroupDecrement(FSP_WGROUP *Wgroup, volatile KSPIN_LOCK *PSpinLockStorage);
 VOID FspWgroupSignalPermanently(FSP_WGROUP *Wgroup);
 NTSTATUS FspWgroupWait(FSP_WGROUP *Wgroup,
     KPROCESSOR_MODE WaitMode, BOOLEAN Alertable, PLARGE_INTEGER PTimeout);

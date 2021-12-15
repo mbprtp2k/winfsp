@@ -133,7 +133,7 @@ PVOID FspIrpHookContext(PVOID Context);
 NTSTATUS FspIrpHookNext(PDEVICE_OBJECT DeviceObject, PIRP Irp, PVOID Context);
 VOID FspWgroupInitialize(FSP_WGROUP *Wgroup);
 VOID FspWgroupIncrement(FSP_WGROUP *Wgroup);
-VOID FspWgroupDecrement(FSP_WGROUP *Wgroup);
+VOID FspWgroupDecrement(FSP_WGROUP *Wgroup, volatile KSPIN_LOCK *PSpinLockStorage);
 VOID FspWgroupSignalPermanently(FSP_WGROUP *Wgroup);
 NTSTATUS FspWgroupWait(FSP_WGROUP *Wgroup,
     KPROCESSOR_MODE WaitMode, BOOLEAN Alertable, PLARGE_INTEGER PTimeout);
@@ -1528,13 +1528,14 @@ VOID FspWgroupIncrement(FSP_WGROUP *Wgroup)
     KeReleaseSpinLock(&Wgroup->SpinLock, Irql);
 }
 
-VOID FspWgroupDecrement(FSP_WGROUP *Wgroup)
+VOID FspWgroupDecrement(FSP_WGROUP *Wgroup, volatile KSPIN_LOCK *PSpinLockStorage)
 {
     // !PAGED_CODE();
 
     KIRQL Irql;
 
     KeAcquireSpinLock(&Wgroup->SpinLock, &Irql);
+    *PSpinLockStorage = Wgroup->SpinLock;
     if (0 < Wgroup->Count && 0 == --Wgroup->Count)
         KeSetEvent(&Wgroup->Event, 1, FALSE);
     KeReleaseSpinLock(&Wgroup->SpinLock, Irql);

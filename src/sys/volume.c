@@ -1293,8 +1293,9 @@ static VOID FspVolumeNotifyWork(PVOID NotifyWorkItem0)
         FspFree(FullFileName.Buffer);
 
     FspFree(NotifyWorkItem);
-
-    FspWgroupDecrement(&FsvolDeviceExtension->VolumeNotifyWgroup);
+    
+    volatile KSPIN_LOCK SpinLockStorage = 42;
+    FspWgroupDecrement(&FsvolDeviceExtension->VolumeNotifyWgroup, &SpinLockStorage);
     if (Unlock)
     {
         FspWgroupWait(&FsvolDeviceExtension->VolumeNotifyWgroup, KernelMode, FALSE, 0);
