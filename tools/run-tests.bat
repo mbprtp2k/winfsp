@@ -29,52 +29,26 @@ cd Q: >nul 2>nul || (echo === Unable to find drive Q: >&2 & goto fail)
 cd R: >nul 2>nul || (echo === Unable to find drive R: >&2 & goto fail)
 
 set dfl_tests=^
-    winfsp-tests-x64 ^
-    winfsp-tests-x64-case-randomize ^
-    winfsp-tests-x64-flushpurge ^
-    winfsp-tests-x64-legacy-unlink-rename ^
-    winfsp-tests-x64-mountpoint-drive ^
-    winfsp-tests-x64-mountpoint-dir ^
-    winfsp-tests-x64-mountpoint-dir-case-sensitive ^
-    winfsp-tests-x64-no-traverse ^
-    winfsp-tests-x64-oplock ^
     winfsp-tests-x64-notify ^
-    winfsp-tests-x64-external ^
-    winfsp-tests-x64-external-share ^
-    fsx-memfs-x64-disk ^
-    fsx-memfs-x64-net ^
-    standby-memfs-x64-disk ^
-    standby-memfs-x64-net ^
-    net-use-memfs-x64 ^
-    winfstest-memfs-x64-disk ^
-    winfstest-memfs-x64-net ^
-    fscrash-x64 ^
-    winfsp-tests-x86 ^
-    winfsp-tests-x86-case-randomize ^
-    winfsp-tests-x86-flushpurge ^
-    winfsp-tests-x86-legacy-unlink-rename ^
-    winfsp-tests-x86-mountpoint-drive ^
-    winfsp-tests-x86-mountpoint-dir ^
-    winfsp-tests-x86-mountpoint-dir-case-sensitive ^
-    winfsp-tests-x86-no-traverse ^
-    winfsp-tests-x86-oplock ^
     winfsp-tests-x86-notify ^
-    winfsp-tests-x86-external ^
-    winfsp-tests-x86-external-share ^
-    fsx-memfs-x86-disk ^
-    fsx-memfs-x86-net ^
-    standby-memfs-x86-disk ^
-    standby-memfs-x86-net ^
-    net-use-memfs-x86 ^
-    winfstest-memfs-x86-disk ^
-    winfstest-memfs-x86-net ^
-    fscrash-x86 ^
-    winfsp-tests-dotnet-external ^
-    winfsp-tests-dotnet-external-share ^
-    fsx-memfs-dotnet-disk ^
-    fsx-memfs-dotnet-net ^
-    winfstest-memfs-dotnet-disk ^
-    winfstest-memfs-dotnet-net
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify
 set opt_tests=^
     ifstest-memfs-x64-disk ^
     ifstest-memfs-x86-disk ^
