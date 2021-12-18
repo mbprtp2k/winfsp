@@ -38,7 +38,6 @@ set dfl_tests=^
     winfsp-tests-x64-mountpoint-dir-case-sensitive ^
     winfsp-tests-x64-no-traverse ^
     winfsp-tests-x64-oplock ^
-    winfsp-tests-x64-notify ^
     winfsp-tests-x64-external ^
     winfsp-tests-x64-external-share ^
     fsx-memfs-x64-disk ^
@@ -58,7 +57,6 @@ set dfl_tests=^
     winfsp-tests-x86-mountpoint-dir-case-sensitive ^
     winfsp-tests-x86-no-traverse ^
     winfsp-tests-x86-oplock ^
-    winfsp-tests-x86-notify ^
     winfsp-tests-x86-external ^
     winfsp-tests-x86-external-share ^
     fsx-memfs-x86-disk ^
@@ -76,6 +74,8 @@ set dfl_tests=^
     winfstest-memfs-dotnet-disk ^
     winfstest-memfs-dotnet-net
 set opt_tests=^
+    winfsp-tests-x64-notify ^
+    winfsp-tests-x86-notify ^
     ifstest-memfs-x64-disk ^
     ifstest-memfs-x86-disk ^
     ifstest-memfs-dotnet-disk ^
