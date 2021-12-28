@@ -199,7 +199,7 @@ static NTSTATUS Create(FSP_FILE_SYSTEM *FileSystem,
         FileAttributes = FILE_ATTRIBUTE_NORMAL;
 
     FileContext->Handle = CreateFileW(FullPath,
-        MAXIMUM_ALLOWED, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, &SecurityAttributes,
+        GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, &SecurityAttributes,
         CREATE_NEW, CreateFlags | FileAttributes, 0);
     if (INVALID_HANDLE_VALUE == FileContext->Handle)
     {
