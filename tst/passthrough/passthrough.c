@@ -62,7 +62,8 @@ static NTSTATUS GetFileInfoInternal(HANDLE Handle, FSP_FSCTL_FILE_INFO *FileInfo
     FileInfo->LastAccessTime = ((PLARGE_INTEGER)&ByHandleFileInfo.ftLastAccessTime)->QuadPart;
     FileInfo->LastWriteTime = ((PLARGE_INTEGER)&ByHandleFileInfo.ftLastWriteTime)->QuadPart;
     FileInfo->ChangeTime = FileInfo->LastWriteTime;
-    FileInfo->IndexNumber = 0;
+    FileInfo->IndexNumber = ((UINT64)ByHandleFileInfo.nFileIndexHigh << 32) |
+        ByHandleFileInfo.nFileIndexLow;
     FileInfo->HardLinks = 0;
 
     return STATUS_SUCCESS;
@@ -198,7 +199,7 @@ static NTSTATUS Create(FSP_FILE_SYSTEM *FileSystem,
         FileAttributes = FILE_ATTRIBUTE_NORMAL;
 
     FileContext->Handle = CreateFileW(FullPath,
-        GrantedAccess, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, &SecurityAttributes,
+        MAXIMUM_ALLOWED, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, &SecurityAttributes,
         CREATE_NEW, CreateFlags | FileAttributes, 0);
     if (INVALID_HANDLE_VALUE == FileContext->Handle)
     {
@@ -233,8 +234,12 @@ static NTSTATUS Open(FSP_FILE_SYSTEM *FileSystem,
         CreateFlags |= FILE_FLAG_DELETE_ON_CLOSE;
 
     FileContext->Handle = CreateFileW(FullPath,
-        GrantedAccess, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0,
+        MAXIMUM_ALLOWED, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0,
         OPEN_EXISTING, CreateFlags, 0);
+    if (INVALID_HANDLE_VALUE == FileContext->Handle && ERROR_SHARING_VIOLATION == GetLastError())
+        FileContext->Handle = CreateFileW(FullPath,
+            GrantedAccess, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0,
+            OPEN_EXISTING, CreateFlags, 0);
     if (INVALID_HANDLE_VALUE == FileContext->Handle)
     {
         free(FileContext);
