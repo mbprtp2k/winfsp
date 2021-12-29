@@ -199,7 +199,7 @@ static NTSTATUS Create(FSP_FILE_SYSTEM *FileSystem,
         FileAttributes = FILE_ATTRIBUTE_NORMAL;
 
     FileContext->Handle = CreateFileW(FullPath,
-        GENERIC_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, &SecurityAttributes,
+        MAXIMUM_ALLOWED, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, &SecurityAttributes,
         CREATE_NEW, CreateFlags | FileAttributes, 0);
     if (INVALID_HANDLE_VALUE == FileContext->Handle)
     {
@@ -236,10 +236,17 @@ static NTSTATUS Open(FSP_FILE_SYSTEM *FileSystem,
     FileContext->Handle = CreateFileW(FullPath,
         MAXIMUM_ALLOWED, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0,
         OPEN_EXISTING, CreateFlags, 0);
-    if (INVALID_HANDLE_VALUE == FileContext->Handle && ERROR_SHARING_VIOLATION == GetLastError())
-        FileContext->Handle = CreateFileW(FullPath,
-            GrantedAccess, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0,
-            OPEN_EXISTING, CreateFlags, 0);
+    if (INVALID_HANDLE_VALUE == FileContext->Handle)
+        switch (GetLastError())
+        {
+        case ERROR_ACCESS_DENIED:
+        case ERROR_WRITE_PROTECT:
+        case ERROR_SHARING_VIOLATION:
+            FileContext->Handle = CreateFileW(FullPath,
+                GrantedAccess, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0,
+                OPEN_EXISTING, CreateFlags, 0);
+            break;
+        }
     if (INVALID_HANDLE_VALUE == FileContext->Handle)
     {
         free(FileContext);
